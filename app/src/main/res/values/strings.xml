@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SchoolManager</string>
+
+    <string name="fragment_posts">게시판</string>
+    <string name="fragment_timetable">시간표</string>
+    <string name="fragment_others">더보기</string>
+</resources>

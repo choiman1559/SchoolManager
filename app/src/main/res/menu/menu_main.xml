@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page_0"
+        android:enabled="true"
+        android:icon="@drawable/ic_fluent_people_community_24_regular"
+        android:title="@string/fragment_posts"/>
+    <item
+        android:id="@+id/page_1"
+        android:enabled="true"
+        android:icon="@drawable/ic_fluent_timeline_24_regular"
+        android:title="@string/fragment_timetable"/>
+    <item
+        android:id="@+id/page_2"
+        android:enabled="true"
+        android:icon="@drawable/ic_fluent_re_order_dots_horizontal_24_regular"
+        android:title="@string/fragment_others"/>
+</menu>
