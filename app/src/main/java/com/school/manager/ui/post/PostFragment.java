@@ -3,6 +3,7 @@ package com.school.manager.ui.post;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import com.school.Application;
 import com.school.manager.R;
+import com.school.manager.ui.post.action.NewPostActivity;
 import com.school.manager.ui.post.db.Constants;
 import com.school.manager.ui.post.db.Post;
 
@@ -70,6 +71,20 @@ public class PostFragment extends Fragment {
         CollectionReference schoolType = db.collection(Application.selfInfo.getSchoolType());
         DocumentReference school = schoolType.document(Application.selfInfo.getSchoolName());
 
+        AppCompatImageButton addNewPostButton = view.findViewById(R.id.addNewPostButton);
+        AppCompatImageButton refreshButton = view.findViewById(R.id.refreshButton);
+
+        addNewPostButton.setOnClickListener((v) -> {
+           Intent intent = new Intent(mContext, NewPostActivity.class);
+           intent.putExtra("boardType", lastSelectedBoard);
+           mContext.startActivity(intent);
+        });
+
+        refreshButton.setOnClickListener((v) -> {
+            setProgress(true);
+            getPosts(school, lastSelectedBoard, false);
+        });
+
         setProgress(true);
         school.get().addOnCompleteListener(boardTask -> {
             this.boards = (List<String>) boardTask.getResult().get(Constants.boardList);
@@ -95,42 +110,53 @@ public class PostFragment extends Fragment {
         });
 
         getPosts(school, Default_Board, true);
+
+        CollectionReference board = school.collection(lastSelectedBoard);
+        board.addSnapshotListener((value, error) -> {
+            if(mPostAdapter != null && value != null) {
+                postFetchDB(value, false);
+            }
+        });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void getPosts(DocumentReference school, String boardName, boolean isInitializing) {
         CollectionReference board = school.collection(boardName);
         board.get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 QuerySnapshot snapshot = task.getResult();
-                if(snapshot.isEmpty()) {
-                    //TODO Show board empty message here
-                    mPostAdapter.setItem(new ArrayList<>());
-                    mPostAdapter.notifyDataSetChanged();
-                } else {
-                    List<DocumentSnapshot> posts = snapshot.getDocuments();
-                    List<Post> data = new ArrayList<>();
-
-                    for(DocumentSnapshot post : posts) {
-                        Post postObj = Post.parseFrom(post);
-                        data.add(postObj);
-                    }
-
-                    if(isInitializing) {
-                        mPostAdapter = new PostAdapter(mContext, data);
-                        recyclerView.setAdapter(mPostAdapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                    } else {
-                        mPostAdapter.setItem(data);
-                        mPostAdapter.notifyDataSetChanged();
-                    }
-                }
+                postFetchDB(snapshot, isInitializing);
             } else {
-                //TODO Show error message here
+                //TODO: Show error message here
             }
 
             setProgress(false);
         });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void postFetchDB(QuerySnapshot snapshot, boolean isInitializing) {
+        if(snapshot.isEmpty()) {
+            //TODO Show board empty message here
+            mPostAdapter.setItem(new ArrayList<>());
+            mPostAdapter.notifyDataSetChanged();
+        } else {
+            List<DocumentSnapshot> posts = snapshot.getDocuments();
+            List<Post> data = new ArrayList<>();
+
+            for(DocumentSnapshot post : posts) {
+                Post postObj = Post.parseFrom(post);
+                data.add(postObj);
+            }
+
+            if(isInitializing) {
+                mPostAdapter = new PostAdapter(mContext, data);
+                recyclerView.setAdapter(mPostAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            } else {
+                mPostAdapter.setItem(data);
+                mPostAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void setProgress(boolean isProgress) {

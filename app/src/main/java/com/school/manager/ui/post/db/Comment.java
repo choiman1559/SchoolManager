@@ -42,7 +42,7 @@ public class Comment implements Serializable {
         Comment comment = new Comment();
         UserInfo writer = new UserInfo();
         writer.setUserName((String) map.get(Constants.writerId));
-        writer.setClassId((String) map.get(Constants.writerClass));
+        writer.setUUID((String) map.get(Constants.UUID));
 
         comment.writer = writer;
         comment.timestamp = ((Timestamp) Objects.requireNonNull(map.get(Constants.time))).toDate();

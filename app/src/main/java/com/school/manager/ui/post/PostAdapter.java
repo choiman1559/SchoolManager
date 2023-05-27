@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.school.manager.R;
-import com.school.manager.ui.post.action.NewPostActivity;
 import com.school.manager.ui.post.action.PostViewActivity;
 import com.school.manager.ui.post.db.Post;
 
@@ -32,7 +31,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_postitem, parent, false));
+        return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item_post, parent, false));
     }
 
     @Override

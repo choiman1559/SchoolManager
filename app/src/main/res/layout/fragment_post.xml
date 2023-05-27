@@ -23,14 +23,26 @@
                 android:id="@+id/boardSelectSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@id/addNewPostButton"
                 android:minHeight="48dp"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/addNewPostButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_toStartOf="@id/refreshButton"
+                android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_fluent_add_24_regular" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/refreshButton"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_fluent_add_24_regular" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_fluent_arrow_sync_24_regular" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

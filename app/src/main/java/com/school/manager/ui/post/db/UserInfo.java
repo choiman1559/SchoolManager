@@ -6,8 +6,6 @@ import java.io.Serializable;
 
 public class UserInfo implements Serializable {
     private String UUID;
-    @PropertyName(Constants.classId)
-    private String classId;
     @PropertyName(Constants.userName)
     private String userName;
     @PropertyName(Constants.profileIcon)
@@ -28,10 +26,6 @@ public class UserInfo implements Serializable {
 
     public void setActualName(String actualName) {
         this.actualName = actualName;
-    }
-
-    public void setClassId(String classId) {
-        this.classId = classId;
     }
 
     public void setProfileIconPath(String profileIconPath) {
@@ -64,10 +58,6 @@ public class UserInfo implements Serializable {
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
-    }
-
-    public String getClassId() {
-        return classId;
     }
 
     public String getActualName() {

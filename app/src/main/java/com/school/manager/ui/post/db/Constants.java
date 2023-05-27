@@ -6,7 +6,7 @@ public class Constants {
     public static final String title = "title";
     public static final String content = "content";
     public static final String time = "time";
-    public static final String writerClass = "writerClass";
+    public static final String UUID = "UUID";
     public static final String writerId = "writerId";
     public static final String dislike = "dislike";
     public static final String like = "like";

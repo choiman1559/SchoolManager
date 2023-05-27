@@ -14,14 +14,13 @@ public class Application extends android.app.Application {
         super.onCreate();
         prefs = getSharedPreferences(getPackageName() + "_preferences", Context.MODE_PRIVATE);
 
-        //TODO Fetch school & user data from Firestore
+        //TODO: Fetch school & user data from Firestore
         selfInfo = new UserInfo();
         selfInfo.setAdmin(true);
         selfInfo.setBanned(false);
-        selfInfo.setClassId("31122");
+        selfInfo.setUUID("{UUID}");
         selfInfo.setActualName("최유준");
         selfInfo.setUserName("Admin");
-        selfInfo.setUUID("STUB");
         selfInfo.setLoginType("google");
         selfInfo.setSchoolName("부흥고등학교_B000012506");
         selfInfo.setSchoolType("고등학교");
