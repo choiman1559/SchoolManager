@@ -38,7 +38,7 @@ public class NewPostActivity extends AppCompatActivity {
                 if(!title.isEmpty() && !content.isEmpty()) {
                     Post postObj = new Post();
                     postObj.setWriter(Application.selfInfo);
-                    postObj.setContent(content);
+                    postObj.setContent(content.replace(System.lineSeparator(), "\\n"));
                     postObj.setTitle(title);
                     postObj.setAttachments(new ArrayList<>());
                     postObj.postItself(boardType, true);
