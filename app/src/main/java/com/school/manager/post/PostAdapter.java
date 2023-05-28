@@ -1,4 +1,4 @@
-package com.school.manager.ui.post;
+package com.school.manager.post;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.school.manager.R;
-import com.school.manager.ui.post.action.PostViewActivity;
-import com.school.manager.ui.post.db.Post;
+import com.school.manager.post.action.PostViewActivity;
+import com.school.manager.post.db.Post;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.school.manager.ui.post.db;
+package com.school.manager.post.db;
 
 import com.google.firebase.firestore.PropertyName;
 

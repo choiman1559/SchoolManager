@@ -1,9 +1,9 @@
-package com.school;
+package com.school.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.school.manager.ui.post.db.UserInfo;
+import com.school.manager.post.db.UserInfo;
 
 public class Application extends android.app.Application {
     public static UserInfo selfInfo;
@@ -26,3 +26,11 @@ public class Application extends android.app.Application {
         selfInfo.setSchoolType("고등학교");
     }
 }
+
+/*
+TODO From now on (0.1.3 ~ )
+1. Add post/comment delete method (O)
+2. Login with other account/user
+3. Show profile icon for user
+4. Implement comment-on-comment
+ */

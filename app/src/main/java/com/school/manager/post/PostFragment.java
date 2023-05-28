@@ -1,4 +1,4 @@
-package com.school.manager.ui.post;
+package com.school.manager.post;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,11 +26,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import com.school.Application;
+import com.school.manager.Application;
 import com.school.manager.R;
-import com.school.manager.ui.post.action.NewPostActivity;
-import com.school.manager.ui.post.db.Constants;
-import com.school.manager.ui.post.db.Post;
+import com.school.manager.post.action.NewPostActivity;
+import com.school.manager.post.db.Constants;
+import com.school.manager.post.db.Post;
 
 import java.util.ArrayList;
 import java.util.List;

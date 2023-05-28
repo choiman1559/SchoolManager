@@ -1,4 +1,4 @@
-package com.school.manager.ui.post.action;
+package com.school.manager.post.action;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import com.school.Application;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.school.manager.Application;
 import com.school.manager.R;
-import com.school.manager.ui.post.db.Post;
+import com.school.manager.post.db.Post;
 
 import java.util.ArrayList;
 
@@ -46,5 +47,8 @@ public class NewPostActivity extends AppCompatActivity {
                 }
             }
         });
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener((v) -> this.finish());
     }
 }

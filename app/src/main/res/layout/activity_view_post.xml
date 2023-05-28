@@ -180,6 +180,15 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/item_board_delete_post"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_toStartOf="@id/item_board_comment_refresh"
+        android:layout_marginEnd="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_fluent_delete_24_regular" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/item_board_comment_refresh"
         android:layout_width="56dp"
         android:layout_height="56dp"

@@ -11,9 +11,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.school.manager.ui.other.OtherFragment;
-import com.school.manager.ui.post.PostFragment;
-import com.school.manager.ui.table.TableFragment;
+import com.school.manager.other.OtherFragment;
+import com.school.manager.post.PostFragment;
+import com.school.manager.table.TableFragment;
 
 import java.util.ArrayList;
 import java.util.List;

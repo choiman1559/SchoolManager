@@ -1,6 +1,4 @@
-package com.school.manager.ui.post.db;
-
-import android.os.Parcelable;
+package com.school.manager.post.db;
 
 import com.google.firebase.Timestamp;
 

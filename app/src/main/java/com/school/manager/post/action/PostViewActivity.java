@@ -1,4 +1,4 @@
-package com.school.manager.ui.post.action;
+package com.school.manager.post.action;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -24,10 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.school.Application;
+import com.school.manager.Application;
 import com.school.manager.R;
-import com.school.manager.ui.post.db.Comment;
-import com.school.manager.ui.post.db.Post;
+import com.school.manager.post.db.Comment;
+import com.school.manager.post.db.Post;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,7 +37,7 @@ import java.util.Locale;
 public class PostViewActivity extends AppCompatActivity {
 
     static SimpleDateFormat dateFormat;
-    Post post;
+    static Post post;
     CommentListAdapter mAdapter;
 
     RecyclerView commentList;
@@ -59,6 +59,7 @@ public class PostViewActivity extends AppCompatActivity {
     AppCompatEditText inputComment;
     AppCompatImageButton sendButton;
     AppCompatImageButton refreshButton;
+    AppCompatImageButton deleteButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class PostViewActivity extends AppCompatActivity {
         inputComment = findViewById(R.id.item_board_comment_input);
         sendButton = findViewById(R.id.item_board_comment_send);
         refreshButton = findViewById(R.id.item_board_comment_refresh);
+        deleteButton = findViewById(R.id.item_board_delete_post);
         commentList = findViewById(R.id.item_board_comment_list);
 
         refreshButton.setOnClickListener((v) -> {
@@ -96,6 +98,17 @@ public class PostViewActivity extends AppCompatActivity {
             reference.get().addOnCompleteListener(task -> {
                 post = Post.parseFrom(task.getResult());
                 init(false);
+            });
+        });
+
+        deleteButton.setOnClickListener((v) -> {
+            setProgress(true);
+            post.deleteItself().addOnCompleteListener(task -> {
+               if(task.isSuccessful()) {
+                   finish();
+               } else {
+                   setProgress(false);
+               }
             });
         });
 
@@ -195,12 +208,18 @@ public class PostViewActivity extends AppCompatActivity {
             return new CommentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_item_comment, parent, false));
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
             Comment comment = comments.get(position);
             holder.timeText.setText(dateFormat.format(comment.getTimestamp()));
             holder.contentText.setText(comment.getContent());
             holder.writerText.setText(comment.getWriter().getUserName());
+            holder.deleteButton.setVisibility(Application.selfInfo.getUUID().equals(comment.getWriter().getUUID()) ? View.VISIBLE : View.GONE);
+            holder.deleteButton.setOnClickListener((v) -> {
+                post.deleteComment(position);
+                notifyDataSetChanged();
+            });
         }
 
         @Override
@@ -211,6 +230,7 @@ public class PostViewActivity extends AppCompatActivity {
         static class CommentViewHolder extends RecyclerView.ViewHolder {
 
             AppCompatImageView profileImage;
+            AppCompatImageButton deleteButton;
             TextView writerText;
             TextView contentText;
             TextView timeText;
@@ -218,6 +238,7 @@ public class PostViewActivity extends AppCompatActivity {
             public CommentViewHolder(@NonNull View itemView) {
                 super(itemView);
                 profileImage = itemView.findViewById(R.id.item_board_profile);
+                deleteButton = itemView.findViewById(R.id.item_board_delete_comment);
                 writerText = itemView.findViewById(R.id.item_board_writer);
                 contentText = itemView.findViewById(R.id.item_board_content);
                 timeText = itemView.findViewById(R.id.item_board_time);

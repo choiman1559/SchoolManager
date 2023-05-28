@@ -1,4 +1,4 @@
-package com.school.manager.ui.table;
+package com.school.manager.other;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,16 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.school.manager.R;
 
-public class TableFragment extends Fragment {
+public class OtherFragment extends Fragment {
 
     Activity mContext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_table, container, false);
+        return inflater.inflate(R.layout.fragment_other, container, false);
     }
 
     @Override
@@ -33,5 +34,7 @@ public class TableFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TextInputEditText input_school = view.findViewById(R.id.input_school);
     }
 }

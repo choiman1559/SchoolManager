@@ -1,5 +1,6 @@
-package com.school.manager.ui.post.db;
+package com.school.manager.post.db;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -7,7 +8,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.SetOptions;
-import com.school.Application;
+import com.school.manager.Application;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -160,6 +161,25 @@ public class Post implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
+    public void deleteComment(int index) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference reference = db.document(documentRef);
+
+        reference.get().addOnCompleteListener(task -> {
+            DocumentSnapshot snapshot = task.getResult();
+            List<Map<String, Object>> maps = (List<Map<String, Object>>) snapshot.get(Constants.comment);
+            if(maps != null && maps.size() > index) {
+                maps.remove(index);
+                comments.remove(index);
+            }
+
+            Map<String, Object> newMap = new HashMap<>();
+            newMap.put(Constants.comment, maps);
+            reference.set(newMap, SetOptions.merge());
+        });
+    }
+
+    @SuppressWarnings("unchecked")
     public void postLike() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference reference = db.document(documentRef);
@@ -214,5 +234,11 @@ public class Post implements Serializable {
 
         if(isMerge) newDocRef.set(data, SetOptions.merge());
         else newDocRef.set(data);
+    }
+
+    public Task<Void> deleteItself() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference reference = db.document(documentRef);
+        return reference.delete();
     }
 }

@@ -1,4 +1,4 @@
-package com.school.manager.ui.post.db;
+package com.school.manager.post.db;
 
 public class Constants {
     public static final String attachment = "attachment";
