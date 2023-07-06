@@ -12,21 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolManager"
         android:name=".Application"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.SchoolManager"
-            android:windowSoftInputMode="adjustNothing|stateHidden">
+            android:name=".StartActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.SchoolManager"
+            android:windowSoftInputMode="adjustNothing|stateHidden">
+        </activity>
+
         <activity android:name=".post.action.NewPostActivity"/>
         <activity android:name=".post.action.PostViewActivity"/>
+        <activity android:name=".auth.LoginActivity"/>
+        <activity android:name=".auth.SchoolAuthActivity"/>
     </application>
-
 </manifest>

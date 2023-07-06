@@ -146,13 +146,7 @@ public class Post implements Serializable {
             DocumentSnapshot snapshot = task.getResult();
             List<Map<String, Object>> maps = (List<Map<String, Object>>) snapshot.get(Constants.comment);
             if(maps == null) maps = new ArrayList<>();
-            Map<String, Object> commentMap = new HashMap<>();
-            maps.add(commentMap);
-
-            commentMap.put(Constants.UUID, comment.getWriter().getUUID());
-            commentMap.put(Constants.writerId, comment.getWriter().getUserName());
-            commentMap.put(Constants.content, comment.getContent());
-            commentMap.put(Constants.time, new Timestamp(comment.getTimestamp()));
+            maps.add(comment.toMap());
 
             Map<String, Object> newMap = new HashMap<>();
             newMap.put(Constants.comment, maps);
@@ -161,16 +155,16 @@ public class Post implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public void deleteComment(int index) {
+    public void deleteComment(Comment comment) {
+        comments.remove(comment);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference reference = db.document(documentRef);
 
         reference.get().addOnCompleteListener(task -> {
             DocumentSnapshot snapshot = task.getResult();
             List<Map<String, Object>> maps = (List<Map<String, Object>>) snapshot.get(Constants.comment);
-            if(maps != null && maps.size() > index) {
-                maps.remove(index);
-                comments.remove(index);
+            if(maps != null) {
+                maps.remove(comment.toMap());
             }
 
             Map<String, Object> newMap = new HashMap<>();

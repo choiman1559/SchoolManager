@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class UserInfo implements Serializable {
     private String UUID;
+
     @PropertyName(Constants.userName)
     private String userName;
     @PropertyName(Constants.profileIcon)
@@ -18,7 +19,6 @@ public class UserInfo implements Serializable {
     private String actualName;
     @PropertyName(Constants.loginWith)
     private String loginType;
-
     @PropertyName(Constants.isBanned)
     private boolean isBanned;
     @PropertyName(Constants.isAdmin)
@@ -95,4 +95,6 @@ public class UserInfo implements Serializable {
     public boolean isBanned() {
         return isBanned;
     }
+
+
 }

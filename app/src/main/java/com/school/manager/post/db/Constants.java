@@ -11,8 +11,7 @@ public class Constants {
     public static final String dislike = "dislike";
     public static final String like = "like";
 
-    public static final String userInfo = "userInfo";
-    public static final String classId = "class";
+    public static final String adminBoard = "adminBoard";
     public static final String userId = "id";
     public static final String userName = "name";
     public static final String profileIcon = "profileIcon";

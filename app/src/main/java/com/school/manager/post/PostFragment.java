@@ -31,9 +31,11 @@ import com.school.manager.R;
 import com.school.manager.post.action.NewPostActivity;
 import com.school.manager.post.db.Constants;
 import com.school.manager.post.db.Post;
+import com.school.manager.util.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PostFragment extends Fragment {
 
@@ -41,6 +43,7 @@ public class PostFragment extends Fragment {
     ProgressBar progressBar;
     RecyclerView recyclerView;
     PostAdapter mPostAdapter;
+    String[] adminBoardList;
     List<String> boards = new ArrayList<>();
     public static final String Default_Board = "자유게시판";
     private static String lastSelectedBoard = Default_Board;
@@ -75,6 +78,21 @@ public class PostFragment extends Fragment {
         AppCompatImageButton refreshButton = view.findViewById(R.id.refreshButton);
 
         addNewPostButton.setOnClickListener((v) -> {
+            if(Application.selfInfo.isBanned()) {
+                ToastHelper.show(mContext, "관리자에 의해 활동이 차단됨", "확인",ToastHelper.LENGTH_SHORT);
+                return;
+            }
+
+            if(!Application.selfInfo.isAdmin()) {
+                int selected = boards.indexOf(lastSelectedBoard);
+                for (String s : adminBoardList) {
+                    if (Objects.equals(s, selected + "")) {
+                        ToastHelper.show(mContext, "관리자 전용 게시판 입니다!", "확인",ToastHelper.LENGTH_SHORT);
+                        return;
+                    }
+                }
+            }
+
            Intent intent = new Intent(mContext, NewPostActivity.class);
            intent.putExtra("boardType", lastSelectedBoard);
            mContext.startActivity(intent);
@@ -87,6 +105,8 @@ public class PostFragment extends Fragment {
 
         setProgress(true);
         school.get().addOnCompleteListener(boardTask -> {
+            DocumentSnapshot snapshot = boardTask.getResult();
+            this.adminBoardList = ((String) Objects.requireNonNull(snapshot.get(Constants.adminBoard))).split(",");
             this.boards = (List<String>) boardTask.getResult().get(Constants.boardList);
             if(boards != null && boards.size() > 0) {
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext,android.R.layout.simple_spinner_dropdown_item, boards);
@@ -126,7 +146,7 @@ public class PostFragment extends Fragment {
                 QuerySnapshot snapshot = task.getResult();
                 postFetchDB(snapshot, isInitializing);
             } else {
-                //TODO: Show error message here
+                ToastHelper.show(mContext, "게시판 목록 가져 오기 실패!", ToastHelper.LENGTH_SHORT);
             }
 
             setProgress(false);
@@ -137,8 +157,15 @@ public class PostFragment extends Fragment {
     private void postFetchDB(QuerySnapshot snapshot, boolean isInitializing) {
         if(snapshot.isEmpty()) {
             //TODO Show board empty message here
-            mPostAdapter.setItem(new ArrayList<>());
-            mPostAdapter.notifyDataSetChanged();
+            List<Post> data = new ArrayList<>();
+            if(isInitializing) {
+                mPostAdapter = new PostAdapter(mContext, data);
+                recyclerView.setAdapter(mPostAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            } else {
+                mPostAdapter.setItem(data);
+                mPostAdapter.notifyDataSetChanged();
+            }
         } else {
             List<DocumentSnapshot> posts = snapshot.getDocuments();
             List<Post> data = new ArrayList<>();

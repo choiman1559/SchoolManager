@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -47,5 +48,15 @@ public class Comment implements Serializable {
         comment.setContent((String) map.get(Constants.content));
 
         return comment;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> commentMap = new HashMap<>();
+        commentMap.put(Constants.UUID, getWriter().getUUID());
+        commentMap.put(Constants.writerId, getWriter().getUserName());
+        commentMap.put(Constants.content, getContent());
+        commentMap.put(Constants.time, new Timestamp(getTimestamp()));
+
+        return commentMap;
     }
 }

@@ -28,6 +28,7 @@ import com.school.manager.Application;
 import com.school.manager.R;
 import com.school.manager.post.db.Comment;
 import com.school.manager.post.db.Post;
+import com.school.manager.util.ToastHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -101,6 +102,7 @@ public class PostViewActivity extends AppCompatActivity {
             });
         });
 
+        deleteButton.setVisibility(Application.selfInfo.isAdmin() || Application.selfInfo.getUUID().equals(post.getWriter().getUUID()) ? View.VISIBLE : View.GONE);
         deleteButton.setOnClickListener((v) -> {
             setProgress(true);
             post.deleteItself().addOnCompleteListener(task -> {
@@ -129,6 +131,11 @@ public class PostViewActivity extends AppCompatActivity {
         });
 
         sendButton.setOnClickListener((v) -> {
+            if(Application.selfInfo.isBanned()) {
+                ToastHelper.show(this, "관리자에 의해 활동이 차단됨", "확인",ToastHelper.LENGTH_SHORT);
+                return;
+            }
+
             Editable editableText = inputComment.getText();
             if (editableText != null) {
                 String comment = editableText.toString();
@@ -215,10 +222,10 @@ public class PostViewActivity extends AppCompatActivity {
             holder.timeText.setText(dateFormat.format(comment.getTimestamp()));
             holder.contentText.setText(comment.getContent());
             holder.writerText.setText(comment.getWriter().getUserName());
-            holder.deleteButton.setVisibility(Application.selfInfo.getUUID().equals(comment.getWriter().getUUID()) ? View.VISIBLE : View.GONE);
+            holder.deleteButton.setVisibility(Application.selfInfo.isAdmin() || Application.selfInfo.getUUID().equals(comment.getWriter().getUUID()) ? View.VISIBLE : View.GONE);
             holder.deleteButton.setOnClickListener((v) -> {
-                post.deleteComment(position);
-                notifyDataSetChanged();
+                post.deleteComment(comment);
+                notifyItemRemoved(position);
             });
         }
 
