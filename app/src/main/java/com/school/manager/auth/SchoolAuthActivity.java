@@ -117,18 +117,8 @@ public class SchoolAuthActivity extends AppCompatActivity {
                 selfInfo.setSchoolName(school.getName() + "_" + school.getUniqueId());
                 selfInfo.setSchoolType(school.getSchoolType());
 
-                Map<String, Object> map = new HashMap<>();
-                map.put(Constants.userId, selfInfo.getUserName());
-                map.put(Constants.isAdmin, selfInfo.isAdmin());
-                map.put(Constants.isBanned, selfInfo.isBanned());
-                map.put(Constants.loginWith, selfInfo.getLoginType());
-                map.put(Constants.name, selfInfo.getActualName());
-                map.put(Constants.profileIcon, selfInfo.getProfileIconPath());
-                map.put(Constants.school, selfInfo.getSchoolName());
-                map.put(Constants.schoolType, selfInfo.getSchoolType());
-
                 FirebaseFirestore.getInstance()
-                        .document("/userInfo/" + selfInfo.getUUID()).set(map)
+                        .document("/userInfo/" + selfInfo.getUUID()).set(selfInfo.getMap())
                         .addOnCompleteListener(task -> createSchoolAndStart(school));
             }
         });

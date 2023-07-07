@@ -26,5 +26,6 @@ TODO From now on (0.1.3 ~ )
 1. Add post/comment delete method (O)
 2. Login with other account/user (O)
 3. Show profile icon for user
+4. Insert attachments and images in articles
 4. Implement comment-on-comment
  */

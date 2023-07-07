@@ -1,9 +1,12 @@
 package com.school.manager.post.action;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +24,11 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.school.manager.Application;
 import com.school.manager.R;
 import com.school.manager.post.db.Comment;
@@ -184,13 +189,23 @@ public class PostViewActivity extends AppCompatActivity {
         }
 
         if(isFirstRun) {
-            mAdapter = new CommentListAdapter(post.getComments());
+            mAdapter = new CommentListAdapter(this, post.getComments());
             commentList.setAdapter(mAdapter);
             commentList.setLayoutManager(new LinearLayoutManager(this));
         } else {
             mAdapter.setItem(post.getComments());
             mAdapter.notifyDataSetChanged();
         }
+
+        post.getWriter().setListener(result -> {
+            Log.d("ccc", result.getUUID() + ": " + result.getProfileIconPath());
+            if(result.getProfileIconPath() != null && !result.getProfileIconPath().isBlank()) {
+                FirebaseStorage storage = FirebaseStorage.getInstance("gs://highschoolmanager-3bf92.appspot.com/");
+                Glide.with(this).load(storage.getReference(result.getProfileIconPath())).into(profileImage);
+            }
+        });
+
+        post.getWriter().getCompleteInfo();
     }
 
     private void setProgress(boolean isProgress) {
@@ -199,9 +214,11 @@ public class PostViewActivity extends AppCompatActivity {
 
     static class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.CommentViewHolder> {
 
+        private final Context mContext;
         private List<Comment> comments;
 
-        public CommentListAdapter(List<Comment> comments) {
+        public CommentListAdapter(Context mContext, List<Comment> comments) {
+            this.mContext = mContext;
             this.comments = comments;
         }
 
@@ -222,11 +239,25 @@ public class PostViewActivity extends AppCompatActivity {
             holder.timeText.setText(dateFormat.format(comment.getTimestamp()));
             holder.contentText.setText(comment.getContent());
             holder.writerText.setText(comment.getWriter().getUserName());
+            if(post.getWriter().getUUID().equals(comment.getWriter().getUUID())) {
+                holder.writerText.setTextColor(Color.BLUE);
+                holder.writerText.setText(String.format("%s (글쓴이)", holder.writerText.getText()));
+            }
             holder.deleteButton.setVisibility(Application.selfInfo.isAdmin() || Application.selfInfo.getUUID().equals(comment.getWriter().getUUID()) ? View.VISIBLE : View.GONE);
             holder.deleteButton.setOnClickListener((v) -> {
                 post.deleteComment(comment);
                 notifyItemRemoved(position);
             });
+
+            comment.getWriter().setListener(result -> {
+                Log.d("ccc", result.getUUID() + ": " + result.getProfileIconPath());
+                if(result.getProfileIconPath() != null && !result.getProfileIconPath().isBlank()) {
+                    FirebaseStorage storage = FirebaseStorage.getInstance("gs://highschoolmanager-3bf92.appspot.com/");
+                    Glide.with(mContext).load(storage.getReference(result.getProfileIconPath())).into(holder.profileImage);
+                }
+            });
+
+            comment.getWriter().getCompleteInfo();
         }
 
         @Override

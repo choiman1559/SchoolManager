@@ -222,9 +222,9 @@ public class Post implements Serializable {
         data.put(Constants.title, title);
         data.put(Constants.time, Timestamp.now());
         data.put(Constants.attachment, attachments);
-        data.put(Constants.dislike, new ArrayList<>());
-        data.put(Constants.like, new ArrayList<>());
-        data.put(Constants.comment, new ArrayList<Map<String, Object>>());
+        data.put(Constants.dislike, dislike == null ? new ArrayList<>() : dislike);
+        data.put(Constants.like, like == null ? new ArrayList<>() : like);
+        data.put(Constants.comment, getComments() == null ? new ArrayList<Map<String, Object>>() : comments);
 
         if(isMerge) newDocRef.set(data, SetOptions.merge());
         else newDocRef.set(data);
