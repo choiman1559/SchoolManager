@@ -35,9 +35,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.school.manager.Application.selfInfo;
@@ -198,7 +196,7 @@ public class SchoolAuthActivity extends AppCompatActivity {
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                         runOnUiThread(() -> {
-                            ToastHelper.show(this, "검색 결과 없음", "확인",ToastHelper.LENGTH_SHORT);
+                            ToastHelper.show(this, "검색 결과 없음", "확인", ToastHelper.LENGTH_SHORT);
                             progressBar.setVisibility(View.GONE);
                             schoolSelect.setVisibility(View.GONE);
                             continueButton.setEnabled(false);
@@ -218,12 +216,22 @@ public class SchoolAuthActivity extends AppCompatActivity {
                     List<String> listBoard = (List<String>) snapshot.get(school.getSchoolType().equals("초등학교") ? "boardList_elementary" : "boardList");
                     school.setBoardList(listBoard);
                     school.setAdminBoard((String) snapshot.get(school.getSchoolType().equals("초등학교") ? "admin_board_elementary" : "admin_board"));
-                    firebaseFirestore.document(String.format("/%s/%s_%s", school.getSchoolType(), school.getName(), school.getUniqueId())).set(school)
-                            .addOnCompleteListener(task0 -> {
-                                startActivity(new Intent(this, MainActivity.class));
-                                finish();
-                            });
+
+                    String schoolDocumentName = String.format("/%s/%s_%s", school.getSchoolType(), school.getName(), school.getUniqueId());
+                    firebaseFirestore.document(schoolDocumentName).get().addOnCompleteListener(task -> {
+                        if (task.getResult().exists()) {
+                            startMainActivity();
+                        } else {
+                            firebaseFirestore.document(schoolDocumentName).set(school)
+                                    .addOnCompleteListener(task0 -> startMainActivity());
+                        }
+                    });
                 });
+    }
+
+    void startMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     static String encode(String s) {
@@ -233,7 +241,7 @@ public class SchoolAuthActivity extends AppCompatActivity {
         CharArrayWriter charArrayWriter = new CharArrayWriter();
 
         for (int i = 0; i < s.length(); ) {
-            int c = (int) s.charAt(i);
+            int c = s.charAt(i);
             if (dontNeedEncoding.get(c)) {
                 if (c == ' ') {
                     c = '+';
@@ -246,7 +254,7 @@ public class SchoolAuthActivity extends AppCompatActivity {
                     charArrayWriter.write(c);
                     if (c >= 0xD800 && c <= 0xDBFF) {
                         if ((i + 1) < s.length()) {
-                            int d = (int) s.charAt(i + 1);
+                            int d = s.charAt(i + 1);
                             if (d >= 0xDC00 && d <= 0xDFFF) {
                                 charArrayWriter.write(d);
                                 i++;
@@ -254,7 +262,7 @@ public class SchoolAuthActivity extends AppCompatActivity {
                         }
                     }
                     i++;
-                } while (i < s.length() && !dontNeedEncoding.get((c = (int) s.charAt(i))));
+                } while (i < s.length() && !dontNeedEncoding.get((c = s.charAt(i))));
 
                 charArrayWriter.flush();
                 String str = new String(charArrayWriter.toCharArray());

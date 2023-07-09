@@ -23,3 +23,7 @@
 # Temp fix for "Instantiation of JsonResponse failed! class com.google.android.gms.internal.firebase-auth-api.f0"
 -keep class com.google.android.gms.internal.** { *; }
 -dontwarn com.google.android.gms.internal.**
+
+# Dont change variables name in the db object classes.
+-keep class com.school.manager.post.db.** { *; }
+-dontwarn com.school.manager.post.db.**
