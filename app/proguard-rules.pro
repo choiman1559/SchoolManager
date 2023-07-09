@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Temp fix for "Instantiation of JsonResponse failed! class com.google.android.gms.internal.firebase-auth-api.f0"
+-keep class com.google.android.gms.internal.** { *; }
+-dontwarn com.google.android.gms.internal.**

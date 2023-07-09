@@ -339,3 +339,4 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/java,android,androidstudio,gradle,intellij,firebase,playframework
+/app/release/output-metadata.json

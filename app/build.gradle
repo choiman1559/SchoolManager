@@ -16,8 +16,8 @@ android {
         applicationId "com.school.manager"
         minSdk 21
         targetSdk 33
-        versionCode 1000104
-        versionName "0.1.4"
+        versionCode 1000107
+        versionName "0.1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

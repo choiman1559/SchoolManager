@@ -49,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (!task.isSuccessful()) {
                         ToastHelper.show(this, "Google 로그인 실패!", "확인", ToastHelper.LENGTH_SHORT);
+                        if(task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
                     } else if (mAuth.getCurrentUser() != null) {
                         prefs.edit().putString("UUID", mAuth.getUid()).apply();
                         startActivity(new Intent(this, StartActivity.class));
